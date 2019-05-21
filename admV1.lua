@@ -5,16 +5,23 @@
 -- blocks to mine --
 local mBlocks = {
     "minecraft:coal_ore",
-    "minecraft:iron_ore"
+    "minecraft:iron_ore",
+    "minecraft:gold_ore",
+    "minecraft:redstone_ore",
+    "minecraft:lapis_ore",
+    "emerald_ore",
+    "biomsopkenty:gem_ore",
+    "ic2:resource"
 }
 
 
--- falling blocks --
-local fBlocks = {
-    "minecraft:sand",
-    "minecraft:gravel", 
-    "minecraft:anvil", 
-    "minecraft:dragon_egg"
+-- block to be announced when found --
+local aBlocks = {
+    "minecraft:coal_ore",
+    "minecraft:diamond_ore",
+    "minecraft:redstone_ore",
+    "minecraft:lapis_ore",
+    "emerald_ore"
 }
 
 
@@ -29,59 +36,35 @@ local function isToMine(blockname)
 end
 
 
-local function digUp()
-    while turtle.detectUp() do
+function digUp()
+    while not turtle.up() do
         turtle.digUp()
-        sleep(1.0)
     end
-    turtle.up()
-end
-
-
-local function isFallingBlock(name)
-    for i=1, #fBlocks do
-        if name == fBlocks[i] then
-            return true
-        else 
-            return false
-        end
-    end 
 end
 
     
-local function digForward()
-    local success, data = turtle.inspect()
-    if isFallingBlock(data.name) then
-        while isFallingBlock(data.name) do
-            turtle.dig()
-            sleep(1)
-        end
-    elseif data.name ~= "minecraft:air" then
+function digForward()
+    while not turtle.forward() do
         turtle.dig()
     end
-    turtle.forward()
 end
+
 
 -- actual digginglogic -- 
 function go(direction)
 
     -- go in some direction --
-    print("looking for a direction to go")
     if direction == "up" then
-        print("going up")
         digUp()
 
     elseif direction == "down" then
-        print("going down")
         turtle.digDown()
         turtle.down()
     else
-        print("going forward")
         digForward()
     end
 
     local success, blockup = turtle.inspectUp()
-    print("checking Block above me")
     if isToMine(blockup.name) then
         go("up")
         turtle.down()
@@ -90,14 +73,12 @@ function go(direction)
     local success, blockdown = turtle.inspectDown()
     if isToMine(blockdown.name) then
         go("down")
-         -- go back --
          turtle.up()
     end
 
     local success, blockinfront = turtle.inspect()
     if isToMine(blockinfront.name) then
         go()
-         -- go back --
          turtle.back()
     end
 
@@ -105,7 +86,6 @@ function go(direction)
     local success, blockleft = turtle.inspect()
     if isToMine(blockleft.name) then
         go()
-         -- go back --
          turtle.back()
     end
 
@@ -114,10 +94,14 @@ function go(direction)
     local success, blockright = turtle.inspect()
     if isToMine(blockright.name) then
         go()
-         -- go back --
         turtle.back()
     end
     turtle.turnLeft()
 end
 
-go()
+
+return{
+    go=go,
+    digForward=digForward,
+    digUp=digUp
+}

@@ -1,4 +1,4 @@
-
+local digHelpers = require("admV1")
 -- Stripminingprogram to Stripmine whole lodes and transport items back via BuildCraft Pipes --
 
 
@@ -10,52 +10,14 @@ local torchSpace = 8
 
 
 -- selecting slots for Turtle -- 
-local torchslot = 16
-local stoneslot = 11
+local torchSlot = 16
+
 local stonepipeslot = 13
 local obspipeslot = 14
-local glassslot = 10
 
 
--- falling blocks --
-local fBlocks = {
-	"minecraft:sand",
-	"minecraft:gravel",
-	"minecraft:anvil",
-	"minecraft:dragon_egg"
-}
 
-
-local function fallingBlock(name)
-	for i=1, #fBlocks do
-		if name == fBlocks[i] then
-			return true
-		else 
-			return false
-		end
-	end 
-end
-
-function walk(length)
-	for i=1, length do
-		turtle.forward()
-	end
-end
-
-
-function placetorch()
-	if torchCounter > 0 then
-		turtle.up()
-		turtle.select(16)
-		turtle.place()
-		torcheCounter = torchCounter - 1
-		turtle.down()
-		turtle.select(1)
-	end
-end
-
-
-function cleaninv()
+local function cleaninv()
 	for i=1, 9 do
 		turtle.select(i)
 		for b=0, 9 do
@@ -66,57 +28,67 @@ function cleaninv()
 end
 
 
-local function dig(length, back)
-	turtle.select(1)
-	local depth = 0
-	local _torchspace = 0
-	for i=0, length do
-		local success, data = turtle.inspect()
-		if fallingBlock(data.name) then
-			-- dog until all gravel dropped 
-			while fallingBlock(data.name) do
-				turtle.dig()
-				sleep(1)
-			end
-		elseif data.name ~= "minecraft:air" then
-			turtle.dig()
-		end
-		turtle.forward()
-		_torchspace = _torchspace + 1
-		turtle.digUp()
-		if _torchspace > torchSpace then
-			placetorch()
-			_torchspace = 0
-		end
-	end
-	if back == true then
-		turtle.turnLeft()
-		turtle.turnLeft()
-		
-		if length < torchSpace then
-			placetorch()
-		end
-		walk(length)
+local function placeTorch()
+	turtle.select(torchSlot)
+	if turtle.getItemDetail().name == "minecraft:torch" then
+		turtle.place()
 	end
 end
 
 
-function walknplace(length)
-	turtle.select(stonepipeslot)
+local function dig(length)
+	turtle.select(1)
 
-	for i=0, length do
-		local success, data = turtle.inspect()
-		
-		if fallingBlock(data.name) then
-			while fallingBlock(data.name) do
-				turtle.dig()
-				sleep(1)
+	for i=1, length do
+		digHelpers.go()
+		-- place torches every <torchSpace> blocks --
+		if math.fmod(i, torchSpace) == 0 then 
+			if not turtle.detectDown() then
+				turtle.turnLeft()
+				turtle.turnLeft()
+				placeTorch()
+				turtle.turnLeft()
+				turtle.turnLeft()
 			end
-		elseif data.name ~= "minecraft:air" then
-			turtle.dig()
 		end
-		
+	end
+end
+
+local function digHall()
+	dig(hallLength)
+	turtle.turnLeft()
+	turtle.turnLeft()
+	placeTorch()
+	digHelpers.digUp()
+	dig(hallLength - 1)
+
+	turtle.forward()
+	turtle.digDown()
+	turtle.down()
+end
+
+
+local function digHalls()
+	-- starts looking ahead and ends looking behind ! --
+
+	turtle.select(1)
+	-- dig left hall --
+	turtle.turnLeft()
+	digHall()
+
+	-- dig right hall --
+	digHall()
+
+	-- turn left to drop items into pipes --
+	turtle.turnLeft()
+end
+
+
+function walknplace(length)
+	for i=1, length do
+		-- place pipe -- 
 		if i < length - 1 then
+			turtle.select(stonepipeslot)
 			turtle.digDown()
 			turtle.placeDown()
 		else 
@@ -124,7 +96,9 @@ function walknplace(length)
 			turtle.digDown()
 			turtle.placeDown()
 		end
-		turtle.forward()
+		-- go forward --
+		turtle.select(1)
+		digHelpers.go()
 		turtle.digUp()
 	end
 end
@@ -145,10 +119,7 @@ end
 -- Main Loop --
 for i=1, totalRows do
 	walknplace(3) 
-	turtle.turnLeft()
-	dig(hallLength,true)
-	dig(hallLength,true)
-	turtle.turnLeft()
+	digHalls()
 	cleaninv()
 	-- take up lila pipes --
 	turtle.select(obspipeslot)
@@ -156,12 +127,13 @@ for i=1, totalRows do
 	turtle.digDown()
 	turtle.forward()
 	turtle.digDown()
-	-- place down the tow remaining slots --
+	-- place down the two remaining pipes --
 	turtle.select(stonepipeslot)
 	turtle.placeDown()
 	turtle.back()
 	turtle.placeDown()
 	turtle.back()
+	turtle.placeDown()
 	turtle.turnLeft()
 	turtle.turnLeft()
 end
