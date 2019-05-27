@@ -1,4 +1,4 @@
-local digHelpers = require("admV1")
+local digHelpers = require("dighelpers")
 -- Stripminingprogram to Stripmine whole lodes and transport items back via BuildCraft Pipes --
 
 
@@ -84,7 +84,20 @@ local function digHalls()
 end
 
 
-function walknplace(length)
+
+turtle.select(16)
+torchCounter = turtle.getItemCount()
+if torchChounter then
+	if turtle.getItemDetail().name ~= "minecraft:torch" then
+		print("No torches given")
+		torchChounter = 0
+	else
+		print("You have " + torchCounter " torches")
+	end
+end 
+
+
+function dignplace(length)
 	for i=1, length do
 		-- place pipe -- 
 		if i < length - 1 then
@@ -104,21 +117,9 @@ function walknplace(length)
 end
 
 
-turtle.select(16)
-torchCounter = turtle.getItemCount()
-if torchChounter then
-	if turtle.getItemDetail().name ~= "minecraft:torch" then
-		print("No torches given")
-		torchChounter = 0
-	else
-		print("You have " + torchCounter " torches")
-	end
-end 
-
-
 -- Main Loop --
 for i=1, totalRows do
-	walknplace(3) 
+	dignplace(3) 
 	digHalls()
 	cleaninv()
 	-- take up lila pipes --

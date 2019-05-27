@@ -100,8 +100,45 @@ function go(direction)
 end
 
 
+function dignplace(length, slot)
+	for i=1, length do
+		-- place pipe -- 
+        turtle.select(stonepipeslot)
+        turtle.digDown()
+        turtle.placeDown()
+
+		-- go forward --
+		turtle.select(1)
+		go()
+	end
+end
+
+
+local function dig(length)
+	turtle.select(1)
+
+	for i=1, length do
+		digerino()
+		-- place torches every <torchSpace> blocks --
+		if math.fmod(i, torchSpace) == 0 then 
+            turtle.turnLeft()
+            turtle.turnLeft()
+            placeTorch()
+            turtle.turnLeft()
+            turtle.turnLeft()
+		end
+    end
+    turtle.turnLeft()
+    turtle.turnLeft()
+    placeTorch()
+    turtle.turnLeft()
+    turtle.turnLeft()
+end
+
+
 return{
     go=go,
     digForward=digForward,
-    digUp=digUp
+    digUp=digUp,
+    walknplace=walknplace
 }
