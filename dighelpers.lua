@@ -113,14 +113,21 @@ function dignplace(length, slot)
 	end
 end
 
+local function walk(length)
+    for i=1, length do
+        go()
+    end
+end
 
-local function dig(length)
+
+local function digHall(length, torches=true)
 	turtle.select(1)
 
 	for i=1, length do
-		digerino()
+        go()
+        turtl.digUp()
 		-- place torches every <torchSpace> blocks --
-		if math.fmod(i, torchSpace) == 0 then 
+		if math.fmod(i, torchSpace) == 0 and torches then 
             turtle.turnLeft()
             turtle.turnLeft()
             placeTorch()
@@ -128,11 +135,13 @@ local function dig(length)
             turtle.turnLeft()
 		end
     end
-    turtle.turnLeft()
-    turtle.turnLeft()
-    placeTorch()
-    turtle.turnLeft()
-    turtle.turnLeft()
+    if torches do 
+        turtle.turnLeft()
+        turtle.turnLeft()
+        placeTorch()
+        turtle.turnLeft()
+        turtle.turnLeft()
+    end
 end
 
 
@@ -140,5 +149,6 @@ return{
     go=go,
     digForward=digForward,
     digUp=digUp,
-    walknplace=walknplace
+    walknplace=walknplace,
+    walk=walk,
 }
