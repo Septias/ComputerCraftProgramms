@@ -1,23 +1,26 @@
 digHelpers = require("digHelpers")
 
 -- variables --
-local startlength = 5
+local startlength = 3
 local increase = 3
-local halls = 10
+local halls = 3
 
 
-for hall=0, halls-1 do
-    digHelpers.dig(startlength + (increase * i))
+
+local halls = halls - 1
+
+
+for hall=0, halls do
+    digHelpers.digHall(startlength + (increase * hall))
     turtle.turnLeft()
 end
 
 turtle.turnLeft()
-turtle.turnLeft()
-turtle.goUp()
+turtle.up()
 
 startlength = startlength + (increase * halls)
 
-for hall=0, halls-1 do
-    digHelpers.walk(startlength  - (increase * i))
+for hall=0, halls do
+    digHelpers.walk(startlength  - (increase * hall))
     turtle.turnRight()
 end

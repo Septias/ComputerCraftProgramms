@@ -24,6 +24,8 @@ local aBlocks = {
     "emerald_ore"
 }
 
+local torchSpace = 8
+
 
 -- function to cheack wether a block is in the list of Blocks to mine --
 local function isToMine(blockname)
@@ -120,35 +122,36 @@ local function walk(length)
 end
 
 
-local function digHall(length, torches=true)
+local function placeTorch(slot)
+    turtle.select(slot)
+    turtle.place()
+end
+
+local function digHall(length)
 	turtle.select(1)
 
 	for i=1, length do
         go()
-        turtl.digUp()
+        turtle.digUp()
 		-- place torches every <torchSpace> blocks --
-		if math.fmod(i, torchSpace) == 0 and torches then 
+		if math.fmod(i, torchSpace) == 0 then 
             turtle.turnLeft()
             turtle.turnLeft()
-            placeTorch()
+            placeTorch(16)
             turtle.turnLeft()
             turtle.turnLeft()
 		end
     end
-    if torches do 
-        turtle.turnLeft()
-        turtle.turnLeft()
-        placeTorch()
-        turtle.turnLeft()
-        turtle.turnLeft()
-    end
+    turtle.turnLeft()
+    turtle.turnLeft()
+    placeTorch(16)
+    turtle.turnLeft()
+    turtle.turnLeft()
 end
 
 
 return{
-    go=go,
-    digForward=digForward,
-    digUp=digUp,
+    digHall=digHall,
     walknplace=walknplace,
     walk=walk,
 }
