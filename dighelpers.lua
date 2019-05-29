@@ -125,13 +125,17 @@ end
 local function placeTorch(slot)
     turtle.select(slot)
     turtle.place()
+    turtle.select(1)
 end
 
-local function digHall(length)
+local function digHall(length, securepath)
 	turtle.select(1)
 
 	for i=1, length do
         go()
+        if not turtle.detectDown() and securepath then
+            turtle.placeDown()
+        end
         turtle.digUp()
 		-- place torches every <torchSpace> blocks --
 		if math.fmod(i, torchSpace) == 0 then 
