@@ -158,5 +158,7 @@ return{
     digHall=digHall,
     walknplace=walknplace,
     walk=walk,
-    go=go
+    go=go,
+    digUp=digUp,
+    digForward=digForward
 }
