@@ -1,4 +1,4 @@
-digHelpers = require("digHelpers")
+digHelpers = require("dighelpers")
 
 -- variables --
 local startlength = 3

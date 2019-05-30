@@ -11,7 +11,6 @@ local torchSpace = 8
 
 -- selecting slots for Turtle -- 
 local torchSlot = 16
-
 local stonepipeslot = 13
 local obspipeslot = 14
 

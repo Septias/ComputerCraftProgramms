@@ -158,4 +158,5 @@ return{
     digHall=digHall,
     walknplace=walknplace,
     walk=walk,
+    go=go
 }
