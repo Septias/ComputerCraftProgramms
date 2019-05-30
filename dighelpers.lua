@@ -51,6 +51,12 @@ function digForward()
     end
 end
 
+function digDown()
+    while not turtle.down() do
+        turtle.digDown()
+    end
+end
+
 
 -- actual digginglogic -- 
 function go(direction)
@@ -160,5 +166,6 @@ return{
     walk=walk,
     go=go,
     digUp=digUp,
-    digForward=digForward
+    digForward=digForward,
+    digDown=digDown
 }
