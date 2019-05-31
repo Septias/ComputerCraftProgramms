@@ -6,30 +6,26 @@ width = 2
 space = 2
 
 
-function go()
-    turtle.placeDown()
-    turtle.dig()
-    turtle.forward()
-    turtle.digUp()
-    turtle.placeDown()
 
+function makestep()
+    turtle.placeDown()
     if width > 1 then
-        makestep()
+        turtle.turnRight()
+        for y=1, width-1 do
+            turtle.dig()
+            turtle.forward()
+            turtle.digUp()
+            turtle.placeDown()
+        end
+        turtle.turnLeft()
+        turtle.turnLeft()
+        for i=1, width-1 do
+            turtle.forward()
+        end
+        turtle.turnRight()
     end
 end
 
-function makestep(width)
-    turtle.turnRight()
-    for y=1, width-1 do
-        go()
-    end
-    turtle.turnLeft()
-    turtle.turnLeft()
-    for i=1, width-1 do
-        turtle.forward()
-    end
-    turtle.turnRight()
-end
 
 
 for x=1, depth do
@@ -45,13 +41,18 @@ for x=1, depth do
     
     -- begining to build --
 
-    go()
+    
     turtle.forward()
     dh.digDown()
 
-    for steps=1, space do
-        go()
+    makestep()
+    if space > 1 then
+        for steps=1, space - 1 do
+            turtle.dig()
+            turtle.forward()
+            turtle.digUp()
+            turtle.placeDown()
+            makestep()
+        end
     end
-    turtle.forward()
-    dh.digDown()
 end
