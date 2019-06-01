@@ -58,53 +58,82 @@ function down()
 end
 
 
+function contains(element, array)
+    for i=1, #array do
+        if array[i] == element then
+            return true
+        end
+    end
+    return false
+end
+
+
 -- actual digginglogic -- 
-function go(direction)
+function go(direction, checked_blocks, position)
+
+        
+    for x=1, #checked_blocks do
+        print(checked_blocks[x])
+    end
 
     -- go in some direction --
     if direction == "up" then
-        digUp()
+        up()
+        position = {position[1], position[2] + 1, position[3]}
 
     elseif direction == "down" then
-        turtle.digDown()
-        turtle.down()
+        down()
+        position = {position[1], position[2] - 1, position[3]}
+
     else
-        digForward()
+        forward()
+        position = {position[1], position[2], position[3] + 1}
     end
 
+
     local success, blockup = turtle.inspectUp()
+    checked_blocks[#checked_blocks + 1] = {position[1], position[2] + 1, position[3]}
     if isToMine(blockup.name) then
-        go("up")
+        go("up", checked_blocks, position)
         turtle.down()
     end
 
     local success, blockdown = turtle.inspectDown()
+    checked_blocks[#checked_blocks + 1] = {position[1], position[2] - 1, position[3]}
     if isToMine(blockdown.name) then
-        go("down")
-         turtle.up()
+        go("down", checked_blocks, position)
+        turtle.up()
     end
-
+    
     local success, blockinfront = turtle.inspect()
+    checked_blocks[#checked_blocks + 1] = {position[1], position[2], position[3] + 1}
     if isToMine(blockinfront.name) then
-        go()
-         turtle.back()
-    end
-
-    turtle.turnLeft()
-    local success, blockleft = turtle.inspect()
-    if isToMine(blockleft.name) then
-        go()
-         turtle.back()
-    end
-
-    turtle.turnRight()
-    turtle.turnRight()
-    local success, blockright = turtle.inspect()
-    if isToMine(blockright.name) then
-        go()
+        go("forward", checked_blocks, position)
         turtle.back()
     end
-    turtle.turnLeft()
+
+    if not contains({position[1] - 1, position[2], position[3]}, checked_blocks) then
+        turtle.turnLeft()
+        local success, blockleft = turtle.inspect()
+        checked_blocks[#checked_blocks + 1] = {position[1] - 1, position[2], position[3]}
+        if isToMine(blockleft.name) then
+            go("forward", checked_blocks, position)
+            turtle.back()
+        end
+        turtle.turnRight()
+    end
+    
+    if not contains({position[1] + 1, position[2], position[3]}, checked_blocks) then
+        turtle.turnRight()
+        local success, blockright = turtle.inspect()
+        checked_blocks[#checked_blocks + 1] = {position[1] + 1, position[2], position[3]}
+        if isToMine(blockright.name) then
+            go("forward", checked_blocks, position)
+            turtle.back()
+        end
+        turtle.turnLeft()
+    end
+
 end
 
 
