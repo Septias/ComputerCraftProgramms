@@ -10,7 +10,7 @@ local function back()
 end
 
 
-for section=1, 100 do
+for section=1, 10 do  -- = 270 Blocks --
     missingrails = turtle.getItemSpace()
     
     -- shift rails to have a full stack --
@@ -19,9 +19,12 @@ for section=1, 100 do
         turtle.transferTo(i - 4, missingrails)
     end
     turtle.select(normalRailSlot)
+
+    -- cancel if there are no rails to place --
     if turtle.getItemSpace() == 64 then
         return
     end
+
     for step=1, 26 do -- 27 is the perfect space --
         back()
         turtle.place()

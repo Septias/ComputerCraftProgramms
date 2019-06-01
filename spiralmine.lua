@@ -9,7 +9,7 @@ local length = startlength
 local halls = halls - 1
 
 
-digHelpers.digHall(length)
+digHelpers.digMiningHall(length)
 turtle.turnLeft()
 
 for hall=1, halls do
@@ -19,7 +19,7 @@ for hall=1, halls do
         length = length + 1
     end
 
-    digHelpers.digHall(length, true)
+    digHelpers.digMiningHall(length, true)
     turtle.turnLeft()
 end
 
@@ -28,7 +28,7 @@ turtle.up()
 
 
 for hall=halls, 1, -1 do
-    digHelpers.digHall(length, false)
+    digHelpers.digMiningHall(length, false)
     turtle.turnRight()
 
     if math.fmod(hall, 2) == 0 then
@@ -37,5 +37,5 @@ for hall=halls, 1, -1 do
         length = length - 1
     end
 end
-digHelpers.digHall(startlength, false)
+digHelpers.digMiningHall(startlength, false)
 turtle.down()

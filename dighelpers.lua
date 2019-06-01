@@ -38,20 +38,20 @@ local function isToMine(blockname)
 end
 
 
-function digUp()
+function up()
     while not turtle.up() do
         turtle.digUp()
     end
 end
 
     
-function digForward()
+function forward()
     while not turtle.forward() do
         turtle.dig()
     end
 end
 
-function digDown()
+function down()
     while not turtle.down() do
         turtle.digDown()
     end
@@ -134,7 +134,7 @@ local function placeTorch(slot)
     turtle.select(1)
 end
 
-local function digHall(length, securepath)
+local function digMiningHall(length, securepath)
 	turtle.select(1)
 
 	for i=1, length do
@@ -160,12 +160,29 @@ local function digHall(length, securepath)
 end
 
 
+function makestep(width)
+    turtle.turnRight()
+    for y=1, width-1 do
+        turtle.dig()
+        turtle.forward()
+        turtle.digUp()
+        turtle.placeDown()
+    end
+    turtle.turnLeft()
+    turtle.turnLeft()
+    for i=1, width-1 do
+        turtle.forward()
+    end
+    turtle.turnRight()
+end
+
+
 return{
-    digHall=digHall,
+    digMiningHall=digMiningHall,
     walknplace=walknplace,
     walk=walk,
     go=go,
-    digUp=digUp,
-    digForward=digForward,
-    digDown=digDown
+    up=up,
+    forward=forward,
+    down=down
 }

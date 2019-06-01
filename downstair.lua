@@ -6,28 +6,6 @@ width = 2
 space = 2
 
 
-
-function makestep()
-    turtle.placeDown()
-    if width > 1 then
-        turtle.turnRight()
-        for y=1, width-1 do
-            turtle.dig()
-            turtle.forward()
-            turtle.digUp()
-            turtle.placeDown()
-        end
-        turtle.turnLeft()
-        turtle.turnLeft()
-        for i=1, width-1 do
-            turtle.forward()
-        end
-        turtle.turnRight()
-    end
-end
-
-
-
 for x=1, depth do
 
     -- shifting items to first slot --
@@ -43,16 +21,17 @@ for x=1, depth do
 
     
     turtle.forward()
-    dh.digDown()
+    dh.down()
 
-    makestep()
+    turtle.placeDown()
+    dh.makestep()
     if space > 1 then
         for steps=1, space - 1 do
             turtle.dig()
             turtle.forward()
             turtle.digUp()
             turtle.placeDown()
-            makestep()
+            dh.makestep()
         end
     end
 end

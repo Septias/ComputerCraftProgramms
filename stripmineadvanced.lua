@@ -1,3 +1,6 @@
+
+-- this file is not maintananced and will most likely not work --
+
 local digHelpers = require("dighelpers")
 -- Stripminingprogram to Stripmine whole lodes and transport items back via BuildCraft Pipes --
 
